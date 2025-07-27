@@ -21,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 
 // ✅ Import your routes
-const generateRoute = require('./routes/generateRoute');
+const generateRoute = require('./routes/generate');
 app.use('/api/generate', generateRoute);
 
 // ✅ Start server
