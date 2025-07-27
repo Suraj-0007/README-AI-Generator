@@ -7,31 +7,38 @@ import MarkdownEditor from '@/components/MarkdownEditor';
 
 export default function GeneratePage() {
   const searchParams = useSearchParams();
-  const repo = searchParams.get('repo');
   const router = useRouter();
 
-  const [template, setTemplate] = useState(searchParams.get('template') || 'simple');
-  const [content, setContent] = useState('Generating README...');
+  const repo = searchParams.get('repo') ?? '';
+  const initialTemplate = searchParams.get('template') ?? 'simple';
+
+  const [template, setTemplate] = useState<string>(initialTemplate);
+  const [content, setContent] = useState<string>('Generating README...');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchReadme = async (repoUrl: string, temp: string) => {
+    setIsLoading(true);
     try {
       const readme = await generateReadme(repoUrl, temp);
-      console.log('📄 Generated README:', readme); // 👈 Debug output
+      console.log('📄 Generated README:', readme);
       setContent(readme || 'Failed to generate README.');
     } catch (error) {
       console.error('❌ Error generating README:', error);
       setContent('Error generating README.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-
   useEffect(() => {
-    if (repo) fetchReadme(repo, template);
+    if (repo) {
+      fetchReadme(repo, template);
+    }
   }, [repo, template]);
 
   const handleSave = (value: string) => {
     setContent(value);
-    alert('README saved locally (not persisted to backend).');
+    alert('✅ README saved locally (not persisted to backend).');
   };
 
   const handleTemplateChange = (newTemplate: string) => {
@@ -43,11 +50,15 @@ export default function GeneratePage() {
 
   return (
     <div className="p-4">
-      <MarkdownEditor
-        content={content}
-        onSave={handleSave}
-        onTemplateChange={handleTemplateChange}
-      />
+      {isLoading ? (
+        <p className="text-gray-600 animate-pulse">⏳ Generating README...</p>
+      ) : (
+        <MarkdownEditor
+          content={content}
+          onSave={handleSave}
+          onTemplateChange={handleTemplateChange}
+        />
+      )}
     </div>
   );
 }
