@@ -52,4 +52,5 @@ Contributions are welcome! Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md
 
 ## License
 
-This project is currently unlicensed.  Please specify a license (e.g., MIT, Apache 2.0, GPL) before making the project publicly available.  Consider the implications of your chosen license carefully.
+This project is licensed under the [MIT License](./LICENSE).
+
